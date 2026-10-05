@@ -5,11 +5,11 @@
 # reproducible — bump them deliberately.
 FROM maven:3.9.16-eclipse-temurin-21-alpine@sha256:308cba8b638ed7e4658cea3f8399066219466211c805f6d5728c3c9c7614661b AS build
 WORKDIR /app
-COPY pom.xml mvnw ./
+COPY pom.xml ./
 COPY .mvn ./.mvn
-RUN ./mvnw -B -ntp -DskipTests dependency:go-offline
+RUN mvn -B -ntp -DskipTests dependency:go-offline
 COPY src ./src
-RUN ./mvnw -B -ntp -DskipTests package
+RUN mvn -B -ntp -DskipTests package
 
 FROM eclipse-temurin:21.0.12_8-jre-alpine@sha256:1a29e1fe337eb28b5bec30f0ee8ed29f0ff80ab6f75dcf9313efe82911065a52 AS layers
 COPY --from=build /app/target/*.jar /tmp/
