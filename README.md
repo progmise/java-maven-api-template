@@ -45,11 +45,13 @@ docker compose up --build     # app on :8080 + postgres + redis, no published im
 
 ## One-time setup (CI/CD)
 
-Repository **secrets**: `DOCKER_USERNAME`, `DOCKER_TOKEN` (Docker Hub push);
-optional `VERCEL_TOKEN`, `GRAFANA_OTLP_AUTH`.
-Repository **variables**: `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` (deploy is
-skipped when unset), `DEPLOY_ENVIRONMENTS` (JSON list, default `["pro"]` —
-e.g. `["cert","pre","pro"]`), `GRAFANA_OTLP_ENDPOINT`.
+Repository **secrets**: `DOCKER_TOKEN` (Docker Hub push); optional
+`VERCEL_TOKEN`, `GRAFANA_OTLP_AUTH`.
+Repository **variables**: `DOCKER_USERNAME` (Docker Hub namespace — public
+info, kept as var so image names aren't masked in logs), `VERCEL_ORG_ID`,
+`VERCEL_PROJECT_ID` (deploy is skipped when unset), `DEPLOY_ENVIRONMENTS`
+(JSON list, default `["pro"]` — e.g. `["cert","pre","pro"]`),
+`GRAFANA_OTLP_ENDPOINT`.
 
 Image name on Docker Hub = `<DOCKER_USERNAME>/<repo-name>`.
 
