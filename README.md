@@ -59,12 +59,14 @@ Image name on Docker Hub = `<DOCKER_USERNAME>/<repo-name>`.
 
 - **Release** (manual, `main`): bump `<version>` in `pom.xml`, merge to
   `main`, run *Actions → Release*. Validates, tests, scans, pushes
-  `:version` + `:latest` to Docker Hub, creates the GitHub Release/tag and
-  deploys each configured env (PRO-only by default) via Vercel.
-- **Deploy** (manual): redeploy any released `version` without a new build —
-  *Actions → Deploy → version*.
+  `:version` + `:latest` to Docker Hub and creates the GitHub Release/tag.
+  **Never deploys** — production goes through Deploy / the orchestrator.
+- **Deploy** (manual): deploy or redeploy any released `version` to one
+  environment — *Actions → Deploy → version + environment* (`pro`/`cert`/`pre`,
+  must be listed in `DEPLOY_ENVIRONMENTS`).
 - **Integration** (on merge): same CI plus publishes the image as
-  `:<sha>` and `:edge`/` :latest`.
+  `:<sha>` and `:edge`/`:latest`, then deploys to every **non-pro** env in
+  `DEPLOY_ENVIRONMENTS` (empty with the default `["pro"]`).
 - **CI Checks** (on PR): build, tests, coverage, SAST (Semgrep), SCA +
   container scan (Trivy).
 
