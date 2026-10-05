@@ -1,0 +1,41 @@
+openapi: 3.0.3
+info:
+  title: java-maven-api-template
+  description: progmise microservice — replace with your API contract.
+  version: 0.1.0
+paths:
+  /v1/ping:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: pong
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        level:
+          type: string
+          enum: [INFO, WARN, ERROR]
+        description:
+          type: string
+    ErrorsResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiError'

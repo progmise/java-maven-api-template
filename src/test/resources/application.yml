@@ -1,0 +1,15 @@
+# Test config — H2 in-memory, no Redis, no Sentry. Keeps @SpringBootTest
+# hermetic; nothing here reaches production.
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+sentry:
+  enabled: false
+
+cache:
+  enabled: false

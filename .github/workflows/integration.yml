@@ -1,0 +1,21 @@
+name: Integration
+
+# Thin caller — all logic lives in progmise/reusable-workflows (@v1).
+# Runs on every merge to development or main; publishes the image as
+# <sha> to Docker Hub.
+
+on:
+  push:
+    branches:
+      - main
+      - development
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  integration:
+    name: Integration
+    uses: progmise/reusable-workflows/.github/workflows/api-integration.yml@v1
+    secrets: inherit

@@ -1,0 +1,17 @@
+name: CI Checks
+
+# Thin caller — all logic lives in progmise/reusable-workflows (@v1).
+# Runs on every pull request.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  ci:
+    name: CI Checks
+    uses: progmise/reusable-workflows/.github/workflows/api-ci.yml@v1
+    secrets: inherit

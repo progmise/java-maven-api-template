@@ -1,0 +1,23 @@
+name: Deploy
+
+# Thin caller — all logic lives in progmise/reusable-workflows (@v1).
+# Manual deploy of an already-released version: Actions → Deploy → Run,
+# enter the version (e.g. 0.2.0). The image must exist on Docker Hub.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to deploy (e.g. 0.2.0)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  deploy:
+    name: Deploy
+    uses: progmise/reusable-workflows/.github/workflows/api-deploy.yml@v1
+    secrets: inherit

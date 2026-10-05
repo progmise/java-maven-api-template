@@ -1,0 +1,19 @@
+name: Release
+
+# Thin caller — all logic lives in progmise/reusable-workflows (@v1).
+# Manual release on main: bump <version> in pom.xml, merge development →
+# main, then run this workflow (Actions → Release → Run). Publishes the
+# image as :<version> + :latest and deploys to Vercel (pro).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    name: Release
+    uses: progmise/reusable-workflows/.github/workflows/api-release.yml@v1
+    secrets: inherit
