@@ -19,7 +19,7 @@ pipelines.
 | Swagger | springdoc UI at `/swagger-ui.html`; static contract in `docs/swagger.yaml` |
 | Sentry | `sentry-spring-boot-starter-jakarta`; active only when `SENTRY_DSN` is set |
 | Docker | `Dockerfile` (layered jar, alpine, non-root); `docker-compose.yml` for a local stack (app + postgres + redis). **Base images are pinned tag+digest** — bump them deliberately (a floating `21-jre-alpine` makes builds and Trivy CSA results irreproducible) |
-| Vercel | `Dockerfile.vercel` — Vercel auto-detects it at the project root and builds the image from source |
+| Vercel | The root `Dockerfile` doubles as the Vercel build — Vercel auto-detects it and builds the image from source; the app reads `$PORT` |
 | CI/CD | Thin callers in `.github/workflows` → `progmise/reusable-workflows@…@v1` |
 
 ## Use this template
@@ -70,6 +70,6 @@ Image name on Docker Hub = `<DOCKER_USERNAME>/<repo-name>`.
 - **CI Checks** (on PR): build, tests, coverage, SAST (Semgrep), SCA +
   container scan (Trivy).
 
-Vercel runs the OCI image built from `Dockerfile.vercel`; production deploys
+Vercel runs the OCI image built from the root `Dockerfile`; production deploys
 use `--prod` (env `pro`), other entries in `DEPLOY_ENVIRONMENTS` deploy as
 previews. See the `api-release` skill for the full procedure.
