@@ -1,9 +1,9 @@
 # Build the jar: ./mvnw -DskipTests package  →  docker build -t <image> .
-FROM eclipse-temurin:21-jre-alpine AS builder
+FROM eclipse-temurin:21.0.12_8-jre-alpine@sha256:1a29e1fe337eb28b5bec30f0ee8ed29f0ff80ab6f75dcf9313efe82911065a52 AS builder
 COPY target/*.jar /tmp/
 RUN java -Djarmode=layertools -jar /tmp/*.jar extract --destination /tmp/app
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21.0.12_8-jre-alpine@sha256:1a29e1fe337eb28b5bec30f0ee8ed29f0ff80ab6f75dcf9313efe82911065a52
 ARG EXTRACTED=/tmp/app
 WORKDIR /opt/app
 

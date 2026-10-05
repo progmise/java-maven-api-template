@@ -18,7 +18,7 @@ pipelines.
 | Database | Any JDBC store via `DB_URL`/`DB_USERNAME`/`DB_PASSWORD` (Postgres driver included; swap for others). Remove `spring-boot-starter-data-jpa` entirely if the API has no DB |
 | Swagger | springdoc UI at `/swagger-ui.html`; static contract in `docs/swagger.yaml` |
 | Sentry | `sentry-spring-boot-starter-jakarta`; active only when `SENTRY_DSN` is set |
-| Docker | `Dockerfile` (layered jar, alpine, non-root); `docker-compose.yml` for a local stack (app + postgres + redis) |
+| Docker | `Dockerfile` (layered jar, alpine, non-root); `docker-compose.yml` for a local stack (app + postgres + redis). **Base images are pinned tag+digest** — bump them deliberately (a floating `21-jre-alpine` makes builds and Trivy CSA results irreproducible) |
 | Vercel | `Dockerfile.vercel` — Vercel auto-detects it at the project root and builds the image from source |
 | CI/CD | Thin callers in `.github/workflows` → `progmise/reusable-workflows@…@v1` |
 

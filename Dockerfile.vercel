@@ -1,6 +1,6 @@
 # Vercel builds the image from source (no prebuilt jar) — detected
 # automatically at project root. Server must listen on $PORT (default 80).
-FROM maven:3.9-eclipse-temurin-21-alpine AS build
+FROM maven:3.9.16-eclipse-temurin-21-alpine@sha256:308cba8b638ed7e4658cea3f8399066219466211c805f6d5728c3c9c7614661b AS build
 WORKDIR /app
 COPY pom.xml mvnw ./
 COPY .mvn ./.mvn
@@ -8,7 +8,7 @@ RUN ./mvnw -B -ntp -DskipTests dependency:go-offline
 COPY src ./src
 RUN ./mvnw -B -ntp -DskipTests package
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21.0.12_8-jre-alpine@sha256:1a29e1fe337eb28b5bec30f0ee8ed29f0ff80ab6f75dcf9313efe82911065a52
 WORKDIR /opt/app
 RUN addgroup -S app && adduser -S app -G app
 USER app
