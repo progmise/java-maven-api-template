@@ -2,9 +2,10 @@ package io.github.progmise.api.infrastructure.config;
 
 import io.github.progmise.api.domain.FeatureToggle;
 import io.github.progmise.commons.infrastructure.FeatureToggleStateRepository;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.GradualActivationStrategy;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
@@ -19,9 +20,10 @@ import org.togglz.core.user.UserProvider;
 import javax.sql.DataSource;
 
 // Feature toggles persisted in the API's own datasource (FEATURE_TOGGLE
-// table). Only active when a DataSource bean exists — drop spring-data-jpa +
-// a driver on the classpath and set DB_* env vars to enable.
-@Configuration(proxyBeanMethods = false)
+// table). Auto-configuration so @ConditionalOnBean(DataSource) evaluates
+// AFTER the datasource auto-config — remove spring-data-jpa + driver and
+// this config silently drops out.
+@AutoConfiguration(after = DataSourceAutoConfiguration.class)
 @ConditionalOnBean(DataSource.class)
 public class TogglzConfig {
 
