@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.16</version>
+    <version>4.1.1</version>
     <relativePath/>
   </parent>
 
@@ -21,9 +21,9 @@
 
   <properties>
     <java.version>21</java.version>
-    <api-commons.version>0.2.0</api-commons.version>
+    <api-commons.version>0.3.0</api-commons.version>
     <!-- Dependency bumps ahead of the Boot BOM — Trivy SCA findings -->
-    <jackson-bom.version>2.21.7</jackson-bom.version>
+    <jackson-2-bom.version>2.21.7</jackson-2-bom.version>
     <netty.version>4.1.138.Final</netty.version>
     <tomcat.version>10.1.60</tomcat.version>
     <postgresql.version>42.7.13</postgresql.version>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.8.13</version>
+      <version>3.1.1</version>
     </dependency>
 
     <!-- Shared progmise library: error contract, validators, cache, toggles -->
@@ -58,8 +58,8 @@
     <!-- Sentry — initializes only when SENTRY_DSN is set -->
     <dependency>
       <groupId>io.sentry</groupId>
-      <artifactId>sentry-spring-boot-starter-jakarta</artifactId>
-      <version>8.24.0</version>
+      <artifactId>sentry-spring-boot-4</artifactId>
+      <version>8.59.0</version>
     </dependency>
 
     <dependency>
@@ -99,6 +99,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-webmvc-test</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

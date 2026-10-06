@@ -4,7 +4,7 @@ import io.github.progmise.api.domain.FeatureToggle;
 import io.github.progmise.commons.infrastructure.FeatureToggleStateRepository;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.GradualActivationStrategy;
