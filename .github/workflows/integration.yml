@@ -17,5 +17,5 @@ permissions:
 jobs:
   integration:
     name: Integration
-    uses: progmise/reusable-workflows/.github/workflows/api-integration.yml@v1
+    uses: progmise/reusable-workflows/.github/workflows/app-integration.yml@v1
     secrets: inherit

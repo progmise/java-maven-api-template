@@ -13,5 +13,5 @@ permissions:
 jobs:
   ci:
     name: CI Checks
-    uses: progmise/reusable-workflows/.github/workflows/api-ci.yml@v1
+    uses: progmise/reusable-workflows/.github/workflows/app-ci.yml@v1
     secrets: inherit

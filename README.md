@@ -72,4 +72,4 @@ Image name on Docker Hub = `<DOCKER_USERNAME>/<repo-name>`.
 
 Vercel runs the OCI image built from the root `Dockerfile`; production deploys
 use `--prod` (env `pro`), other entries in `DEPLOY_ENVIRONMENTS` deploy as
-previews. See the `api-release` skill for the full procedure.
+previews. See the `app-release` skill for the full procedure.
