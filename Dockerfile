@@ -10,10 +10,18 @@ COPY .mvn ./.mvn
 RUN mvn -B -ntp -DskipTests dependency:go-offline
 COPY src ./src
 RUN mvn -B -ntp -DskipTests package
+# Boot 4 moved layertools out of the fat jar — fetch jarmode-tools at the
+# version managed by the parent pom
+RUN mvn -B -ntp -q dependency:copy \
+      -Dartifact=org.springframework.boot:spring-boot-jarmode-tools:$(mvn -B -ntp -q help:evaluate -Dexpression=project.parent.version -DforceStdout | tail -1) \
+      -DoutputDirectory=/app/tools
 
 FROM eclipse-temurin:21.0.12_8-jre-alpine@sha256:1a29e1fe337eb28b5bec30f0ee8ed29f0ff80ab6f75dcf9313efe82911065a52 AS layers
 COPY --from=build /app/target/*.jar /tmp/
-RUN java -Djarmode=layertools -jar /tmp/*.jar extract --destination /tmp/app
+COPY --from=build /app/tools/*.jar /tmp/tools/
+RUN java -Djarmode=tools -cp "/tmp/tools/*:$(ls /tmp/*.jar | head -1)" \
+    org.springframework.boot.loader.launch.JarLauncher extract \
+    --layers --launcher --destination /tmp/app
 
 FROM eclipse-temurin:21.0.12_8-jre-alpine@sha256:1a29e1fe337eb28b5bec30f0ee8ed29f0ff80ab6f75dcf9313efe82911065a52
 # Bump packages with known fixes beyond the pinned base (CSA findings)
