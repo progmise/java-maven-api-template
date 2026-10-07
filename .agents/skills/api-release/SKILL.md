@@ -1,6 +1,6 @@
 ---
 name: api-release
-description: Release this API — version bump, tag -> GitHub Actions -> Docker Hub image -> GitHub Release -> Vercel deploy (pro)
+description: Release this API — version bump, tag -> GitHub Actions -> Docker Hub image -> GitHub Release (deploy runs separately via Deploy/orchestrator)
 argument-hint: "[change summary]"
 allowed-tools:
   - read
@@ -24,8 +24,9 @@ permissions:
 Drives a **release** of this microservice. Publishing is fully automated:
 running the **Release** workflow (manual dispatch on `main`) validates the
 version, runs the CI checks (incl. image build + scans), pushes the image to
-Docker Hub (`:version` + `:latest`), creates the git tag + GitHub Release and
-deploys to Vercel.
+Docker Hub (`:version` + `:latest`) and creates the git tag + GitHub Release.
+It **never deploys** — Vercel deploys run through the **Deploy** workflow
+(manual) or the `deploy-manifest` orchestrator.
 
 ## When to Use
 - A change is ready to ship as a new deployed version.
@@ -33,9 +34,10 @@ deploys to Vercel.
   workflow instead — no version bump needed).
 
 ## Preconditions
-- Repo secrets configured (`DOCKER_USERNAME`, `DOCKER_TOKEN`; optional
-  `VERCEL_TOKEN`) and vars (`VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`,
-  `DEPLOY_ENVIRONMENTS`) — see README *One-time setup*.
+- For image publishing: var `DOCKER_USERNAME` + secret `DOCKER_TOKEN`
+  (Publish Image is skipped without them — release still tags).
+- For deploys later: secret `VERCEL_TOKEN` + vars `VERCEL_ORG_ID`,
+  `VERCEL_PROJECT_ID`, `DEPLOY_ENVIRONMENTS` — see README *One-time setup*.
 - Working tree green (`build-and-test` skill) before bumping.
 
 ---
@@ -64,13 +66,17 @@ git commit -m "<description>"
 
 ## Step 5: Run the Release workflow
 - Actions → **Release** → *Run workflow* on `main`. It validates the version
-  (`--kind api`: fails if not on `main`, tag exists or SNAPSHOT; no Maven
-  Central check — APIs publish images), runs CI, publishes the image and
-  deploys each env in `DEPLOY_ENVIRONMENTS` (default `["pro"]`).
-- Without `VERCEL_TOKEN`/`VERCEL_PROJECT_ID` the deploy job is skipped —
-  image + release still ship.
+  (`--kind app`: fails if not on `main`, tag exists or SNAPSHOT; no Maven
+  Central check — apps publish images), runs CI, publishes the image and
+  creates the tag + GitHub Release. **It never deploys.**
 
-## Step 6: Verify
+## Step 6: Deploy
+- Actions → **Deploy** → `version` + `environment` (`pro`/`cert`/`pre` —
+  must be in `DEPLOY_ENVIRONMENTS`, default `["pro"]`), or bump the
+  component tag in `deploy-manifest` and let the orchestrator deploy.
+- Without `VERCEL_TOKEN`/`VERCEL_PROJECT_ID` the deploy job is skipped.
+
+## Step 7: Verify
 - Image: `docker.io/<DOCKER_USERNAME>/<repo>:<version>` on Docker Hub.
 - GitHub Release/tag `<version>` created.
 - Vercel deployment URL in the deploy job summary; hit `/actuator/health`.

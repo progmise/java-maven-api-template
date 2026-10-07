@@ -10,16 +10,16 @@ pipelines.
 
 | Piece | Notes |
 |---|---|
-| Java 21 + Spring Boot 3 + Maven wrapper | `./mvnw` — no local Maven needed |
+| Java 21 + Spring Boot 4 + Maven wrapper | `./mvnw` — no local Maven needed |
 | Hexagonal layout | `domain` / `application.ports` / `application.usecases` / `infrastructure.adapters` |
 | `api-commons` | Error contract, validators, `Cache`/`RCache`, `FeatureToggleHelper`, `ApiExceptionHandler` (auto-configured) |
 | Togglz | JDBC-backed feature flags — see `domain/FeatureToggle` + `TogglzConfig` (auto-disabled without a `DataSource`) |
 | Redis cache | Spring Data Redis + Redisson; fail-open |
 | Database | Any JDBC store via `DB_URL`/`DB_USERNAME`/`DB_PASSWORD` (Postgres driver included; swap for others). Remove `spring-boot-starter-data-jpa` entirely if the API has no DB |
 | Swagger | springdoc UI at `/swagger-ui.html`; static contract in `docs/swagger.yaml` |
-| Sentry | `sentry-spring-boot-starter-jakarta`; active only when `SENTRY_DSN` is set |
+| Sentry | `sentry-spring-boot-4` (Boot 4 module); active only when `SENTRY_DSN` is set |
 | Docker | `Dockerfile` (layered jar, alpine, non-root); `docker-compose.yml` for a local stack (app + postgres + redis). **Base images are pinned tag+digest** — bump them deliberately (a floating `21-jre-alpine` makes builds and Trivy CSA results irreproducible) |
-| Vercel | The root `Dockerfile` doubles as the Vercel build — Vercel auto-detects it and builds the image from source; the app reads `$PORT` |
+| Vercel | The root `Dockerfile` doubles as the Vercel build — set the project's Framework Preset to `Container` (auto-detection needs a `Dockerfile.vercel` marker; see `deploy-dashboard` for the pattern); the app reads `$PORT` |
 | CI/CD | Thin callers in `.github/workflows` → `progmise/reusable-workflows@…@v1` |
 
 ## Use this template
@@ -45,15 +45,16 @@ docker compose up --build     # app on :8080 + postgres + redis, no published im
 
 ## One-time setup (CI/CD)
 
-Repository **secrets**: `DOCKER_TOKEN` (Docker Hub push); optional
-`VERCEL_TOKEN`, `GRAFANA_OTLP_AUTH`.
-Repository **variables**: `DOCKER_USERNAME` (Docker Hub namespace — public
-info, kept as var so image names aren't masked in logs), `VERCEL_ORG_ID`,
-`VERCEL_PROJECT_ID` (deploy is skipped when unset), `DEPLOY_ENVIRONMENTS`
-(JSON list, default `["pro"]` — e.g. `["cert","pre","pro"]`),
-`GRAFANA_OTLP_ENDPOINT`.
+Everything is **optional** — CI stays green with zero credentials:
 
-Image name on Docker Hub = `<DOCKER_USERNAME>/<repo-name>`.
+- **Publish Image** (needs `DOCKER_USERNAME` var + `DOCKER_TOKEN` secret):
+  pushes to Docker Hub as `<DOCKER_USERNAME>/<repo-name>` — skipped when unset
+- **Deploy** (needs `VERCEL_TOKEN` secret + `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID`
+  vars): Vercel — skipped when unset
+- **`DEPLOY_ENVIRONMENTS`** (var, JSON list, default `["pro"]` — e.g.
+  `["cert","pre","pro"]`)
+- **Tracing** (needs `GRAFANA_OTLP_ENDPOINT` var + `GRAFANA_OTLP_AUTH`
+  secret): OTLP spans — skipped when unset
 
 ## Release & deploy
 
@@ -72,4 +73,4 @@ Image name on Docker Hub = `<DOCKER_USERNAME>/<repo-name>`.
 
 Vercel runs the OCI image built from the root `Dockerfile`; production deploys
 use `--prod` (env `pro`), other entries in `DEPLOY_ENVIRONMENTS` deploy as
-previews. See the `app-release` skill for the full procedure.
+previews. See the `api-release` skill for the full procedure.

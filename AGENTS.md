@@ -50,8 +50,11 @@ Rules:
 All logic lives in `progmise/reusable-workflows` (`@v1`, `secrets: inherit`).
 Callers here are thin — keep them that way. Pipeline order:
 `Setup → Build artifact → Build image → SAST ‖ SCA ‖ CSA → Tracing → Summary`;
-release adds `Validate → CI → Publish Image → Release → Deploy` before
-Tracing/Summary. Deploy envs: `vars.DEPLOY_ENVIRONMENTS` (default `["pro"]`).
+release adds `Validate → CI → Publish Image → Release` before Tracing/Summary —
+**never deploys**; deploys run via Deploy (manual) or the orchestrator.
+Deploy envs: `vars.DEPLOY_ENVIRONMENTS` (default `["pro"]`). `Publish Image`
+and `Deploy` are skipped when `DOCKER_USERNAME`/`VERCEL_PROJECT_ID` are unset —
+a fresh template CI stays green without credentials.
 
 ## Verify before done
 
