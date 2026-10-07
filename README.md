@@ -19,7 +19,7 @@ pipelines.
 | Swagger | springdoc UI at `/swagger-ui.html`; static contract in `docs/swagger.yaml` |
 | Sentry | `sentry-spring-boot-4` (Boot 4 module); active only when `SENTRY_DSN` is set |
 | Docker | `Dockerfile` (layered jar, alpine, non-root); `docker-compose.yml` for a local stack (app + postgres + redis). **Base images are pinned tag+digest** — bump them deliberately (a floating `21-jre-alpine` makes builds and Trivy CSA results irreproducible) |
-| Vercel | The root `Dockerfile` doubles as the Vercel build — set the project's Framework Preset to `Container` (auto-detection needs a `Dockerfile.vercel` marker; see `deploy-dashboard` for the pattern); the app reads `$PORT` |
+| Vercel | The root `Dockerfile` doubles as the Vercel build — set the project's Framework Preset to `Container`; the app reads `$PORT` |
 | CI/CD | Thin callers in `.github/workflows` → `progmise/reusable-workflows@…@v1` |
 
 ## Use this template
