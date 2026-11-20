@@ -26,7 +26,7 @@ running the **Release** workflow (manual dispatch on `main`) validates the
 version, runs the CI checks (incl. image build + scans), pushes the image to
 Docker Hub (`:version` + `:latest`) and creates the git tag + GitHub Release.
 It **never deploys** — Vercel deploys run through the **Deploy** workflow
-(manual) or the `deploy-manifest` orchestrator.
+(manual) or the app-model orchestrator.
 
 ## When to Use
 - A change is ready to ship as a new deployed version.
@@ -73,7 +73,7 @@ git commit -m "<description>"
 ## Step 6: Deploy
 - Actions → **Deploy** → `version` + `environment` (`pro`/`cert`/`pre` —
   must be in `DEPLOY_ENVIRONMENTS`, default `["pro"]`), or bump the
-  component tag in `deploy-manifest` and let the orchestrator deploy.
+  component's `version` in the `<app>-app-model` OAM and let the orchestrator deploy.
 - Without `VERCEL_TOKEN`/`VERCEL_PROJECT_ID` the deploy job is skipped.
 
 ## Step 7: Verify
